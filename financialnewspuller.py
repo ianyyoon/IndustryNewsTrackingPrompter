@@ -12,9 +12,17 @@ marketaux_apikey = os.getenv("marketaux_apikey_apikey")
 
 #we make a function to sort given ticker by industry, and also take the industry name and put individual stocks into new lists grouped by industries
 
-def sortbyindustry(tickrinpt)
-
-    return 
+def sortbyindustry (tickerinput):
+    industrydict = {}
+    for ticker in symbols:
+        url = https://finnhub.io/api/v1/stock/profile2
+        request = requests.get(url, params={'symbol': ticker, 'token':  APIKEY })
+        data = request.json()
+        industry = data.get('finnhubIndustry', 'Unknown')
+        if industry not in industrydict:
+            industrydict[industry] = []
+        industrydict[industry].append(ticker)
+    return industrydict
 
 def industrylists()
 #take each industry list and get financial data for the industry name, and then all the individual stocks in the industry, + an option to store the average financial data of all in order to see things like portfolio changes
@@ -66,7 +74,7 @@ def build_app():
                 return weather
             prompt = build_weather_prompt(ptype, city_name, weather)
             model_output = call_ollama(prompt)
-            return f"[{weather['location']}, {weather['temp_f']}°F, {weather['condition']}]\n\n{model_output}"
+            return f"[{weather['location']}, {weather['temp_f']}Â°F, {weather['condition']}]\n\n{model_output}"
 '''
         generate_btn.click(generate_handler, inputs=[piece_type, city], outputs=[output_box])
     return demo
@@ -74,4 +82,3 @@ def build_app():
 
 app = build_app()
 app.launch()
-
