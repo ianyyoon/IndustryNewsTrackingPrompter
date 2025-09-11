@@ -7,16 +7,20 @@ import os
 
 load_dotenv()
 
+tickerinput = AAPL, MSFT, PFE #test tickers till gradio 
+
 finnhub_apikey = os.getenv("finnhub_apikey")
 marketaux_apikey = os.getenv("marketaux_apikey_apikey")
 
+finnbaseURL = "https://finnhub.io/api/v1"
+
 #we make a function to sort given ticker by industry, and also take the industry name and put individual stocks into new lists grouped by industries
 
-def sortbyindustry (tickerinput):
+def sortbyindustry(tickerinput):
     industrydict = {}
-    for ticker in symbols:
-        url = https://finnhub.io/api/v1/stock/profile2
-        request = requests.get(url, params={'symbol': ticker, 'token':  APIKEY })
+    for ticker in tickerinput:
+        url = f"{finnbaseURL}/stock/profile2"
+        request = requests.get(url, params={'symbol': ticker, 'token':  finnhub_apikey })
         data = request.json()
         industry = data.get('finnhubIndustry', 'Unknown')
         if industry not in industrydict:
@@ -24,7 +28,25 @@ def sortbyindustry (tickerinput):
         industrydict[industry].append(ticker)
     return industrydict
 
-def industrylists()
+
+def get_quote(tckr: str) -> float:
+    url = f"{finnbaseURL}/quote"
+    request = requests.get(url, params={"symbol": tckr, "token": finnhub_apikey})
+    request.raise_for_status()
+    data = request.json()
+    return data.get("c") 
+
+def industryFinData(industrydict):
+    
+    return
+def tickersFinData(tickerinput):
+    tickerdata = {}
+    for ticker in tickerinput:
+        tickerdata[ticker] = get_quote(ticker)
+    return tickerdata
+
+
+
 #take each industry list and get financial data for the industry name, and then all the individual stocks in the industry, + an option to store the average financial data of all in order to see things like portfolio changes
 
 #request for news on the industries/ indivudal stocks, or for both, using a graphical choice, 3 articles per industry
